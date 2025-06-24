@@ -8,6 +8,7 @@ router = APIRouter(prefix="/passengers")
 
 @router.post("/", response_model=PassengerOut)
 def create(passenger: PassengerCreate, db: Session = Depends(get_db)):
+
     return create_passenger(db, passenger)
 
 @router.get("/", response_model=list[PassengerOut])

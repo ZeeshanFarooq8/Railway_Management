@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from app.db.session import get_db
 from app.models.station import Station
 from app.schemas.station import StationCreate, StationOut
+from app.logger import logger
 
 router = APIRouter()
 
@@ -22,6 +23,7 @@ def get_stations(db: Session = Depends(get_db)):
 def get_station(station_id: int, db: Session = Depends(get_db)):
     station = db.query(Station).get(station_id)
     if not station:
+        logger.info("Station not found.")
         raise HTTPException(status_code=404, detail="Station not found")
     return station
 
@@ -32,4 +34,7 @@ def delete_station(station_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Station not found")
     db.delete(station)
     db.commit()
+
+
+    logger.info("Station deleted successfully.")
     return {"msg": "Station deleted successfully"}
